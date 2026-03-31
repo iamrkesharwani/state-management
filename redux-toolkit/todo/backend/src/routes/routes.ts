@@ -43,6 +43,14 @@ router.put('/todos/:id', async (req, res) => {
   res.json({ message: 'Todo status updated!' });
 });
 
+router.delete('/todos/completed', async (req, res) => {
+  const db = await connectDb();
+  const result = await db
+    .collection<ITodo>('todos')
+    .deleteMany({ completed: true });
+  res.json({ message: `${result.deletedCount} todos deleted` });
+});
+
 router.delete('/todos/:id', async (req, res) => {
   const { id } = req.params;
   const db = await connectDb();
