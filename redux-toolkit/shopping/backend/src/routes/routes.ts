@@ -8,12 +8,19 @@ router.get('/products', async (req, res) => {
   try {
     const limit = Math.max(Number(req.query.limit as string) || 10, 0);
     const offset = Math.max(Number(req.query.offset as string) || 0, 0);
+
     const result = await pool.query<Product>(
-      `SELECT * FROM products
+      `SELECT 
+        product_id AS id,
+        name,
+        price,
+        stock_quantity
+      FROM products
       ORDER BY product_id DESC
       LIMIT $1 OFFSET $2`,
       [limit, offset]
     );
+
     res.status(200).json(result.rows);
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -31,8 +38,12 @@ router.post('/products', async (req, res) => {
 
     const result = await pool.query<Product>(
       `INSERT INTO products (name, price, stock_quantity)
-      VALUES ($1, $2, $3)
-      RETURNING *`,
+       VALUES ($1, $2, $3)
+       RETURNING 
+         product_id AS id,
+         name,
+         price,
+         stock_quantity`,
       [name, price, stock_quantity]
     );
 
@@ -50,7 +61,7 @@ router.put(
       const id = Number(req.params.id);
       const { name, price, stock_quantity } = req.body;
 
-      if (!id) {
+      if (isNaN(id) || id <= 0) {
         return res.status(400).json({ message: 'Invalid ID' });
       }
 
@@ -60,11 +71,15 @@ router.put(
 
       const result = await pool.query<Product>(
         `UPDATE products
-        SET name = $1,
-            price = $2,
-            stock_quantity = $3
-        WHERE product_id = $4
-        RETURNING *`,
+         SET name = $1,
+             price = $2,
+             stock_quantity = $3
+         WHERE product_id = $4
+         RETURNING 
+           product_id AS id,
+           name,
+           price,
+           stock_quantity`,
         [name, price, stock_quantity, id]
       );
 
@@ -84,14 +99,14 @@ router.delete('/products/:id', async (req, res) => {
   try {
     const id = Number(req.params.id);
 
-    if (!id) {
+    if (isNaN(id) || id <= 0) {
       return res.status(400).json({ message: 'Invalid ID' });
     }
 
     const result = await pool.query(
       `DELETE FROM products
-      WHERE product_id = $1
-      RETURNING product_id`,
+       WHERE product_id = $1
+       RETURNING product_id AS id`,
       [id]
     );
 
@@ -99,7 +114,10 @@ router.delete('/products/:id', async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    res.status(200).json({ message: 'Product deleted' });
+    res.status(200).json({
+      message: 'Product deleted',
+      id: result.rows[0].id,
+    });
   } catch (error) {
     console.error('Error deleting product:', error);
     res.status(500).json({ message: 'Internal server error' });
