@@ -26,6 +26,7 @@ const startServer = async () => {
       server.close(async () => {
         await closeDb();
         console.log();
+        process.exit(0);
       });
     };
 

@@ -112,7 +112,9 @@ router.delete('/:productId', async (req: Request, res: Response) => {
     const cartColl = db.collection<ICartItem>('cart');
     const productColl = db.collection<IProduct>('products');
 
-    const cartItem = await cartColl.findOne({ _id: new ObjectId(productId) });
+    const cartItem = await cartColl.findOne({
+      productId: new ObjectId(productId),
+    });
     if (!cartItem) return res.status(404).json({ message: 'Item not in cart' });
 
     await cartColl.deleteOne({ productId: new ObjectId(productId) });
