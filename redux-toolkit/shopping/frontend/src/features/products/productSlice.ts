@@ -6,6 +6,7 @@ import {
   fetchProducts,
   updateProductData,
 } from './productThunk.js';
+import { addToCart, decrementFromCart } from '../cart/cartThunk.js';
 
 const initialState: ProductState = {
   products: [],
@@ -44,6 +45,20 @@ export const productSlice = createSlice({
       .addCase(deleteProductFromDb.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.products = state.products.filter((p) => p._id !== action.payload);
+      })
+      .addCase(addToCart.fulfilled, (state, action) => {
+        const product = state.products.find(
+          (p) => p._id === action.payload.productId
+        );
+        if (product) {
+          product.stock -= 1;
+        }
+      })
+      .addCase(decrementFromCart.fulfilled, (state, action) => {
+        const product = state.products.find((p) => p._id === action.payload);
+        if (product) {
+          product.stock += 1;
+        }
       })
       .addMatcher(isPending(...productThunks), (state) => {
         state.status = 'loading';
