@@ -9,7 +9,7 @@ export const fetchProducts = createAsyncThunk<
   { rejectValue: string }
 >('products/fetchProducts', async (_, { rejectWithValue }) => {
   try {
-    const { data } = await api.get<IProduct[]>('/');
+    const { data } = await api.get<IProduct[]>('/products');
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -28,7 +28,7 @@ export const addProductsToDb = createAsyncThunk<
   { rejectValue: string }
 >('products/addProductsToDb', async (newProduct, { rejectWithValue }) => {
   try {
-    const { data } = await api.post<IProduct>('/add-product', newProduct);
+    const { data } = await api.post<IProduct>('/products', newProduct);
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -48,7 +48,7 @@ export const updateProductData = createAsyncThunk<
   'products/updateProductData',
   async ({ _id, ...fields }, { rejectWithValue }) => {
     try {
-      const { data } = await api.put<IProduct>(`/${_id}`, fields);
+      const { data } = await api.put<IProduct>(`/products/${_id}`, fields);
       return data;
     } catch (error) {
       if (isAxiosError(error)) {
@@ -67,7 +67,7 @@ export const deleteProductFromDb = createAsyncThunk<
   { rejectValue: string }
 >('products/deleteProductFromDb', async (id, { rejectWithValue }) => {
   try {
-    await api.delete(`/${id}`);
+    await api.delete(`/products/${id}`);
     return id;
   } catch (error) {
     if (isAxiosError(error)) {

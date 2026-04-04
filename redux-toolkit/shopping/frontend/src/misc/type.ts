@@ -6,8 +6,23 @@ export interface IProduct {
   lastUpdated: string;
 }
 
+export interface ICartItem {
+  _id: string;
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  addedAt: string;
+}
+
 export interface ProductState {
   products: IProduct[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null | undefined;
+}
+
+export interface CartState {
+  items: ICartItem[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null | undefined;
 }
@@ -15,3 +30,8 @@ export interface ProductState {
 export type ICreateProduct = Omit<IProduct, '_id' | 'lastUpdated'>;
 
 export type IUpdateProduct = Partial<ICreateProduct> & Pick<IProduct, '_id'>;
+
+export interface AddToCartInput {
+  productId: string;
+  quantity?: number;
+}

@@ -13,6 +13,13 @@ const initialState: ProductState = {
   error: null,
 };
 
+const productThunks = [
+  fetchProducts,
+  addProductsToDb,
+  updateProductData,
+  deleteProductFromDb,
+] as const;
+
 export const productSlice = createSlice({
   name: 'products',
   initialState,
@@ -38,11 +45,11 @@ export const productSlice = createSlice({
         state.status = 'succeeded';
         state.products = state.products.filter((p) => p._id !== action.payload);
       })
-      .addMatcher(isPending, (state) => {
+      .addMatcher(isPending(...productThunks), (state) => {
         state.status = 'loading';
         state.error = null;
       })
-      .addMatcher(isRejected, (state, action) => {
+      .addMatcher(isRejected(...productThunks), (state, action) => {
         state.status = 'failed';
         state.error = (action.payload as string) ?? action.error?.message;
       });
