@@ -100,6 +100,37 @@ router.patch('/:productId/decrement', async (req: Request, res: Response) => {
   }
 });
 
+// Clear cart
+router.delete('/clear', async (req: Request, res: Response) => {
+  try {
+    const db = await connectDb();
+    const cartColl = db.collection<ICartItem>('cart');
+    const productColl = db.collection<IProduct>('products');
+
+    const cartItems = await cartColl.find({}).toArray();
+
+    if (cartItems.length === 0) {
+      return res.status(200).json({ message: 'Cart is already empty' });
+    }
+
+    const bulkOps = cartItems.map((item) => ({
+      updateOne: {
+        filter: { _id: item.productId },
+        update: { $inc: { stock: item.quantity } },
+      },
+    }));
+
+    await productColl.bulkWrite(bulkOps);
+    await cartColl.deleteMany({});
+
+    res.status(200).json({
+      message: 'Cart cleared and stock restored for all items',
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 // Delete from cart
 router.delete('/:productId', async (req: Request, res: Response) => {
   try {
