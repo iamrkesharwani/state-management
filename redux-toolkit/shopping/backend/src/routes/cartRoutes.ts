@@ -101,7 +101,7 @@ router.patch('/:productId/decrement', async (req: Request, res: Response) => {
 });
 
 // Clear cart
-router.delete('/clear', async (req: Request, res: Response) => {
+router.delete('/clear', async (_req: Request, res: Response) => {
   try {
     const db = await connectDb();
     const cartColl = db.collection<ICartItem>('cart');
