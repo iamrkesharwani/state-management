@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../api/axios';
+import api from '../../api/axios';
 import { isAxiosError } from 'axios';
-import type { IProduct, ICreateProduct, IUpdateProduct } from './type';
+import type { IProduct, ICreateProduct, IUpdateProduct } from '../../app/type';
 
 export const fetchProducts = createAsyncThunk<
   IProduct[],

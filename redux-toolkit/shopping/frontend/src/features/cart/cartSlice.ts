@@ -1,5 +1,5 @@
 import { createSlice, isPending, isRejected } from '@reduxjs/toolkit';
-import type { CartState } from './type.js';
+import type { CartState } from '../../app/type.js';
 import {
   fetchCart,
   addToCart,

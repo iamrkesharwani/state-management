@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../api/axios';
+import api from '../../api/axios';
 import { isAxiosError } from 'axios';
-import type { ICartItem, AddToCartInput } from './type';
+import type { ICartItem, AddToCartInput } from '../../app/type';
 
 export const fetchCart = createAsyncThunk<
   ICartItem[],

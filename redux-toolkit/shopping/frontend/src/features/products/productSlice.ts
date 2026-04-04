@@ -1,5 +1,5 @@
 import { createSlice, isPending, isRejected } from '@reduxjs/toolkit';
-import type { ProductState } from './type.js';
+import type { ProductState } from '../../app/type.js';
 import {
   addProductsToDb,
   deleteProductFromDb,
