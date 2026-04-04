@@ -14,8 +14,7 @@ export const fetchProducts = createAsyncThunk<
   } catch (error) {
     if (isAxiosError(error)) {
       return rejectWithValue(
-        error.response?.data?.message ||
-          'An error occurred while fetching products'
+        error.response?.data?.message || 'Failed to fetch products'
       );
     }
     return rejectWithValue('An unexpected error occurred');
