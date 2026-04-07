@@ -1,7 +1,9 @@
 import { connectDb } from '../config/db.js';
-import type { Request, Response } from 'express';
+import { Router, type Request, type Response } from 'express';
 import type { WatchlistItem } from '../config/type.js';
 import { ObjectId, type OptionalId } from 'mongodb';
+
+const router = Router();
 
 export const getWatchList = async (_req: Request, res: Response) => {
   try {
@@ -108,3 +110,10 @@ export const deleteWatchListItem = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+router.get('/', getWatchList);
+router.post('/', postWatchList);
+router.patch(`/:id`, updateWatchStatus);
+router.delete(`/:id`, deleteWatchListItem);
+
+export default router;
