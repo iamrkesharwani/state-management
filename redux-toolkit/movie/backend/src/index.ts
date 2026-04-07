@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { connectDb, closeDb } from './config/db.js';
-import movieRoutes from './routes/route.js'
+import movieRoutes from './routes/route.js';
 
 const app = express();
 const port = process.env.PORT;
@@ -10,7 +10,7 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 
-
+app.use('/', movieRoutes);
 
 const startServer = async () => {
   try {
